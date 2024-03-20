@@ -22,13 +22,18 @@
         h2 {
             text-align: center;
         }
-        p {
-            margin-bottom: 10px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
-        .hasil {
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 5px;
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -46,14 +51,28 @@
             function hitungLuasSegitiga($alas, $tinggi) {
                 return 0.5 * $alas * $tinggi;
             }
-
-            // Iterasi melalui data dan hitung luas untuk setiap segitiga
-            echo "<p><strong>Hasil:</strong></p>";
-            for ($i = 0; $i < count($data_alas); $i++) {
-                $luas = hitungLuasSegitiga($data_alas[$i], $data_tinggi[$i]);
-                echo "<p>Luas segitiga dengan alas {$data_alas[$i]} dan tinggi {$data_tinggi[$i]} adalah: $luas </p>";
-            }
             ?>
+
+            <table>
+                <tr>
+                    <th>No.</th>
+                    <th>Alas</th>
+                    <th>Tinggi</th>
+                    <th>Luas</th>
+                </tr>
+                <?php
+                // Iterasi melalui data dan hitung luas untuk setiap segitiga
+                for ($i = 0; $i < count($data_alas); $i++) {
+                    $luas = hitungLuasSegitiga($data_alas[$i], $data_tinggi[$i]);
+                    echo "<tr>";
+                    echo "<td>" . ($i + 1) . "</td>";
+                    echo "<td>" . $data_alas[$i] . "</td>";
+                    echo "<td>" . $data_tinggi[$i] . "</td>";
+                    echo "<td>" . $luas . "</td>";
+                    echo "</tr>";
+                }
+                ?>
+            </table>
         </div>
     </div>
 </body>
