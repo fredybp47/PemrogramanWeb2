@@ -51,27 +51,35 @@
                     </div>
                 </form>
                 <?php
-                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                    $username = $_POST['username'];
-                    $password = $_POST['password'];
-
-                    $sql = "SELECT * FROM users WHERE username='$username'";
-                    $result = $conn->query($sql);
-
-                    if ($result->num_rows > 0) {
-                        $row = $result->fetch_assoc();
-                        
-                        if (password_verify($password, $row['password'])) {
-                            $_SESSION['user_id'] = $row['id'];
-                            $_SESSION['username'] = $row['username'];
-                            header("Location: index.php");
-                        } else {
-                            echo "<p class='text-red-500 text-xs italic mt-4'>Invalid password</p>";
-                        }
+              if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+            
+                // Query untuk mencari user berdasarkan username
+                $stmt = $conn->prepare("SELECT * FROM users WHERE username=?");
+                $stmt->bind_param("s", $username);
+                $stmt->execute();
+                $result = $stmt->get_result();
+            
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+            
+                    // Membandingkan password input dengan password dari database
+                    if ($password === $row['password']) { // Anda bisa menggunakan === jika password tidak di-hash
+                        $_SESSION['user_id'] = $row['id'];
+                        $_SESSION['username'] = $row['username'];
+                        header("Location: index.php");
+                        exit;
                     } else {
-                        echo "<p class='text-red-500 text-xs italic mt-4'>No user found with that username</p>";
+                        echo "<p class='text-red-500 text-xs italic mt-4'>Invalid password</p>";
                     }
+                } else {
+                    echo "<p class='text-red-500 text-xs italic mt-4'>No user found with that username</p>";
                 }
+            
+                $stmt->close();
+            }
+            
                 ?>
             </div>
             <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 animate-login">

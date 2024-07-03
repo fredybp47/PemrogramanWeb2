@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
-$username = "root"; // sesuaikan dengan username MySQL Anda
-$password = ""; // sesuaikan dengan password MySQL Anda
+$username = "root"; // Sesuaikan dengan username MySQL Anda
+$password = ""; // Sesuaikan dengan password MySQL Anda, kosong jika tidak ada password
 $dbname = "crud_db";
 
 // Buat koneksi

@@ -55,19 +55,24 @@
                     </div>
                 </form>
                 <?php
-                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                    $username = $_POST['username'];
-                    $email = $_POST['email'];
-                    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-                    $sql = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
-
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<p class='text-green-500 text-xs italic mt-4'>Registration successful</p>";
-                    } else {
-                        echo "<p class='text-red-500 text-xs italic mt-4'>Error: " . $sql . "<br>" . $conn->error . "</p>";
-                    }
+              if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $username = $_POST['username'];
+                $email = $_POST['email'];
+                $password = $_POST['password']; // Password tanpa hash
+            
+                // Perhatikan penggunaan metode query parameterized untuk menghindari SQL injection
+                $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+                $stmt->bind_param("sss", $username, $email, $password);
+            
+                if ($stmt->execute()) {
+                    echo "<p class='text-green-500 text-xs italic mt-4'>Registration successful</p>";
+                } else {
+                    echo "<p class='text-red-500 text-xs italic mt-4'>Error: " . $stmt->error . "</p>";
                 }
+            
+                $stmt->close();
+            }
+            
                 ?>
             </div>
             <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
